@@ -6,5 +6,6 @@ blogz\Scripts\activate
 
 #python modules required per "pip install ..."
 -flask
+-flask-sqlalchemy
 -SQLAlchemy
 -pymysql
