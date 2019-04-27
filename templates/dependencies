@@ -1,0 +1,10 @@
+#Init virtual environment
+virtualenv blogz
+
+#activate virtual environment
+blogz\Scripts\activate
+
+#python modules required per "pip install ..."
+-flask
+-SQLAlchemy
+-pymysql
