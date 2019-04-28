@@ -81,8 +81,8 @@ class BlogForm(Form):
 #logout user
 @app.route('/logout')
 def logout():
-    #TODO - remove user from session
-    del session['email']
+    session.pop('username', None) #TODO - does this need to be explicit per username?
+    session['logged_in'] = False
     flash('You have been logged out!', 'success')
     return redirect(url_for('home'))
 
@@ -97,7 +97,8 @@ def login():
         hashed = existing_user.password
         if pbkdf2_sha256.verify(password, hashed):
             print('IT WORKED!!!!!!!!!!!!!!!!!')
-            session['email'] = existing_user.email
+            session['username'] = existing_user.username
+            session['logged_in'] = True
             flash('You are now logged in!', 'success')
             return redirect('/')
         elif not existing_user:
@@ -125,7 +126,8 @@ def signup():
             new_user = User(username, email, pbkdf2_sha256.hash(password))
             db.session.add(new_user)
             db.session.commit()
-            session['email'] = email
+            session['username'] = new_user.username
+            session['logged_in'] = True
             return redirect('/')
         elif len(existing_user) > 0:
             flash('That username is already in use, try again!', 'danger')
@@ -156,7 +158,9 @@ def newpost():
         elif len(body) < 1:
             flash('You must provide content to the body!', 'danger')
             redirect(url_for('newpost'))
-        else:  #TODO - how to get user.id for foreign key?  maybe session??
+        else:  #TODO - user_id to foreign key for blog is working, is there a better way?
+            username = session['username']
+            user = User.query.filter_by(username=username).first()
             blog = Blog(title, body, user.id)
             db.session.add(blog)
             db.session.commit()
@@ -170,7 +174,7 @@ def newpost():
 @app.route('/')
 def home():
     blog = Blog.query.order_by(Blog.pub_date.desc()).all()
-    return render_template('home.html', title='Home', blog=blog)
+    return render_template('home.html', title='Home', blogs=blog)
 
 
 @app.before_request
