@@ -1,5 +1,9 @@
 #crap the github genned ignore didnt add
 blogz/
+.vscode/
+test.py
+blogz/
+__pycache__/
 
 
 # Byte-compiled / optimized / DLL files

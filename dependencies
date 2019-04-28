@@ -9,3 +9,5 @@ blogz\Scripts\activate
 -flask-sqlalchemy
 -SQLAlchemy
 -pymysql
+-wtforms
+-passlib

@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ title }}</title>
-    <!--external stylesheets-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-    <!---->
-    {% block body %}
-    {% endblock %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <style>
+            .help-inline {
+                color:red;
+            }
+        </style>
+    </head>
+    <body>
+        <!--Navigation bar-->
+        {% include 'includes/_navigation.html' %}
 
-    <!--external scripts-->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+        
+        <!--include for error messages-->
+        <div class="container">
+            {% include 'includes/_messages.html' %}
+        </div>
+        
+        
+        <!--Main dynamic content-->
+        {% block body %}
+        {% endblock %}
+
+
+        <!--Scripts for bootstrapCDN and ckeditor-->
+        <style src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></style>
+        <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
+        <script type="text/javascript">CKEDITOR.replace('editor')</script>
+    </body>
 </html>
