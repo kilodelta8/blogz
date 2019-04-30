@@ -16,7 +16,7 @@
         <ul>
             {% for blog in blogs %}
             <li><a href="blog/{{blog.id}}"><strong>{{blog.title}}</strong></a> 
-            <p><small>Written by <a href="">{{blog.user_name}}</a> on {{blog.pub_date}}</small></p>
+            <p><small>Written by <a href="user/{{blog.user_name}}">{{blog.user_name}}</a> on {{blog.pub_date}}</small></p>
             </li>
             {% endfor %}
         </ul>

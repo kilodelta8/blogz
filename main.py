@@ -86,6 +86,12 @@ def logout():
     flash('You have been logged out!', 'success')
     return redirect(url_for('home'))
 
+
+@app.route('/user/<string:user_name>/', methods=['GET', 'POST'])
+def user(user_name):
+    blogs = Blog.query.filter_by(user_name=user_name).all()
+    return render_template('user.html', title=user_name, blogs=blogs, username=user_name)
+
 #login to account
 @app.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ username }}</h1>
+</div>
+<hr />
+<div class="container">
+    {% if blogs|length == 0 %}
+        <p>No blogz yet</p>
+    {% else %}
+        {% for blog in blogs %}
+            <h1><a href="/blog/{{blog.id}}">{{blog.title}}</a></h1>
+            <small>By {{blog.user_name}} on {{blog.pub_date}}</small>
+            <hr />
+        {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}
