@@ -10,14 +10,12 @@
 </div>
 <hr />
 <div class="container">
-    {% if blogs|length == 0 %}
-        <p>No entries yet</p>
+    {% if users|length == 0 %}
+        <p>No users yet</p>
     {% else %}
         <ul>
-            {% for blog in blogs %}
-            <li><a href="blog/{{blog.id}}"><strong>{{blog.title}}</strong></a> 
-            <p><small>Written by <a href="">{{blog.user_name}}</a> on {{blog.pub_date}}</small></p>
-            </li>
+            {% for user in users %}
+            <li><a href=""><strong>{{user.username}}</strong></a></li>
             {% endfor %}
         </ul>
     {% endif %}

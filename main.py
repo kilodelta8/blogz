@@ -41,12 +41,12 @@ class Blog(db.Model): #TODO - build Blog and User model then DB
     body = db.Column(db.Text)
     pub_date = db.Column(db.DateTime, nullable=False,
         default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_name = db.Column(db.String(30))
     #init a post
-    def __init__(self, title, body, user_id):
+    def __init__(self, title, body, user_name):
         self.title = title
         self.body = body
-        self.user_id = user_id
+        self.user_name = user_name
     #reppin again....
     def __repr__(self):
         return (self.title, self.body)
@@ -96,17 +96,16 @@ def login():
         existing_user = User.query.filter_by(username=username).first()
         hashed = existing_user.password
         if pbkdf2_sha256.verify(password, hashed):
-            print('IT WORKED!!!!!!!!!!!!!!!!!')
             session['username'] = existing_user.username
             session['logged_in'] = True
             flash('You are now logged in!', 'success')
             return redirect('/')
         elif not existing_user:
             flash('Error with your username!', 'danger')
-            redirect(url_for('login'))
+            return redirect(url_for('login'))
         else:
             flash('Password is incorrect', 'danger')
-            redirect(url_for('login'))
+            return redirect(url_for('login'))
     else:
         return render_template('login.html', title='Login!', form=form)
 
@@ -129,12 +128,12 @@ def signup():
             session['username'] = new_user.username
             session['logged_in'] = True
             return redirect('/')
-        elif len(existing_user) > 0:
+        elif len(existing_user) > 0:  #TODO VERIFY PASSWORDS MATCH
             flash('That username is already in use, try again!', 'danger')
-            redirect(url_for('signup'))
+            return redirect(url_for('signup'))
         elif len(existing_email) > 0:
             flash('That email is already in use, try again!', 'danger')
-            redirect(url_for('signup'))
+            return redirect(url_for('signup'))
     else:
         return render_template('signup.html', title='Signup!', form=form)
 
@@ -161,7 +160,7 @@ def newpost():
         else:  #TODO - user_id to foreign key for blog is working, is there a better way?
             username = session['username']
             user = User.query.filter_by(username=username).first()
-            blog = Blog(title, body, user.id)
+            blog = Blog(title, body, user.username)
             db.session.add(blog)
             db.session.commit()
             last_item = Blog.query.order_by(Blog.id.desc()).first()
@@ -169,17 +168,25 @@ def newpost():
             return render_template('blog.html', blog=blog)
     return render_template('newpost.html', title='Add and Entry', form=form)
 
-    
+
+
+
 #home - landing page route
-@app.route('/')
+@app.route('/home')
 def home():
     blog = Blog.query.order_by(Blog.pub_date.desc()).all()
-    return render_template('home.html', title='Home', blogs=blog)
+    return render_template('home.html', title='Blogz Index', blogs=blog)
 
+
+
+@app.route('/')
+def index():
+    users = User.query.order_by(User.username.asc()).all()
+    return render_template('index.html', title="Index", users=users)
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'index']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
 
