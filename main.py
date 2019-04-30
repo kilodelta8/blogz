@@ -81,7 +81,7 @@ class BlogForm(Form):
 #logout user
 @app.route('/logout')
 def logout():
-    session.pop('username', None) #TODO - does this need to be explicit per username?
+    session.pop('username', None)
     session['logged_in'] = False
     flash('You have been logged out!', 'success')
     return redirect(url_for('home'))
@@ -127,6 +127,9 @@ def signup():
         verify = request.form['verify']
         existing_user = User.query.filter_by(username=username).first()
         existing_email = User.query.filter_by(email=email).first()
+        if password != verify:
+            flash('Your passwords do not match, try again!', 'danger')
+            return redirect(url_for('signup'))
         if not existing_email or not existing_user:
             new_user = User(username, email, pbkdf2_sha256.hash(password))
             db.session.add(new_user)
@@ -134,7 +137,7 @@ def signup():
             session['username'] = new_user.username
             session['logged_in'] = True
             return redirect('/')
-        elif len(existing_user) > 0:  #TODO VERIFY PASSWORDS MATCH
+        elif len(existing_user) > 0:  
             flash('That username is already in use, try again!', 'danger')
             return redirect(url_for('signup'))
         elif len(existing_email) > 0:
