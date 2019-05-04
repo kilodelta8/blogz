@@ -9,7 +9,7 @@ from datetime import datetime
 #application init and configurations
 app = Flask(__name__)
 app.secret_key = 'lamePass1234'  #TODO - change to environment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://Blogz:Blogz1234D!@localhost:3306/blogz"  #TODO - setup database (design models)
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://Blogz:Blogz1234D!@localhost:3306/blogz"  
 app.config['SQLALCHEMY_ECHO'] = True
 
 
@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 
 #<<<<<------------------------Models----------------------->>>>>
 #user model
-class User(db.Model): #TODO - build User and Blog model then DB
+class User(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30))
     email = db.Column(db.String(120))
@@ -35,7 +35,7 @@ class User(db.Model): #TODO - build User and Blog model then DB
 
 
 #blog model
-class Blog(db.Model): #TODO - build Blog and User model then DB
+class Blog(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.Text)
@@ -54,7 +54,7 @@ class Blog(db.Model): #TODO - build Blog and User model then DB
 
 #<<<<------------------------Forms--------------------->>>>
 #Registration form
-class RegistrationForm(Form): #TODO - build user registration wtform with validators
+class RegistrationForm(Form): 
     username = StringField('Username', [validators.Length(min=6, max=30), validators.DataRequired()])
     email = StringField('Email', [validators.Length(max=120), validators.DataRequired()])
     password = PasswordField('Password', [validators.Length(min=7), validators.DataRequired()])
@@ -63,7 +63,7 @@ class RegistrationForm(Form): #TODO - build user registration wtform with valida
 
 
 #Login form
-class LoginForm(Form): #TODO - build user login wtform with validators (copy minus RegForm)
+class LoginForm(Form): 
     username = StringField('Username', [validators.Length(min=6, max=30), validators.DataRequired()])
     password = PasswordField('Password', [validators.Length(min=7), validators.DataRequired()])
     submit = SubmitField('Submit')
@@ -196,7 +196,7 @@ def index():
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'signup', 'index']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
