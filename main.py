@@ -87,10 +87,13 @@ def logout():
     return redirect(url_for('home'))
 
 
+
 @app.route('/user/<string:user_name>/', methods=['GET', 'POST'])
 def user(user_name):
     blogs = Blog.query.filter_by(user_name=user_name).all()
     return render_template('user.html', title=user_name, blogs=blogs, username=user_name)
+
+
 
 #login to account
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,6 +117,7 @@ def login():
             return redirect(url_for('login'))
     else:
         return render_template('login.html', title='Login!', form=form)
+
 
 
 #signup for an account
@@ -146,11 +150,14 @@ def signup():
     else:
         return render_template('signup.html', title='Signup!', form=form)
 
+
+
 #display a single blog post by ID query
 @app.route('/blog/<int:id>/', methods=['GET', 'POST'])
 def blog(id):
     blog = Blog.query.get(id)
     return render_template('blog.html', title=blog.title, blog=blog)
+
 
 
 #create a new blog post with error checking
@@ -166,7 +173,7 @@ def newpost():
         elif len(body) < 1:
             flash('You must provide content to the body!', 'danger')
             redirect(url_for('newpost'))
-        else:  #TODO - user_id to foreign key for blog is working, is there a better way?
+        else:  
             username = session['username']
             user = User.query.filter_by(username=username).first()
             blog = Blog(title, body, user.username)
@@ -176,7 +183,6 @@ def newpost():
             id = last_item.id
             return render_template('blog.html', blog=blog)
     return render_template('newpost.html', title='Add and Entry', form=form)
-
 
 
 
@@ -192,6 +198,8 @@ def home():
 def index():
     users = User.query.order_by(User.username.asc()).all()
     return render_template('index.html', title="Index", users=users)
+
+
 
 @app.before_request
 def require_login():
